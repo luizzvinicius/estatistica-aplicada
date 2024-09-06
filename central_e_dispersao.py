@@ -1,6 +1,8 @@
 import numpy as np
 import statistics as st
 
+# coeficiente de variação: S (desvio padrão) / x barra
+
 data = np.array([
     94, 84.9, 82.6, 69.5, 80.1, 79.6, 81.4, 77.8, 81.7, 78.8, 73.2, 87.9, 87.9, 93.5, 82.3, 79.3, 78.3, 71.6, 88.6, 74.6, 74.1, 80.6
 ])
