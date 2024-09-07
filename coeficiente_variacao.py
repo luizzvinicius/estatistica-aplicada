@@ -34,28 +34,6 @@ data_2 = np.array([77.1, 71.7, 91, 72.2, 74.8, 85.1, 67.6, 69.9, 75.3, 71.7, 65.
 # plt.ylabel('houry')
 # plt.show()
 
-'''
-# regra empírica
-s = desvio padrão
-
-68% -> [média - s (desvio padrão), média + s ]
-95% -> [média - 2s, média + 2s]
-99,7% -> [média - 3s, média + 3s ] (ponto de corte)
-Se a distribuição for normal, os dados vão estar nesse intervalo
-
-cheryshev (não sei)
-75% -> [média - 2s, média + 2s]
-88,9% -> [média - 3s, média + 3s]
-
-
-Não retira todos os outliers de primeira, tem que ser aos poucos para 
-'''
-
-
-stock = pd.read_csv('stock_data.csv')
-iris = pd.read_csv('iris.csv')
-
-# sns.boxplot(stock['Open'])
 x = np.mean(data)
 ponto_corte = np.std(data, ddof=1) * 3
 inf, sup = x - ponto_corte, x + ponto_corte
