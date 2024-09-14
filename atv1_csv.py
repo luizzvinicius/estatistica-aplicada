@@ -73,6 +73,7 @@ def dispersal():
         sns.scatterplot(data=iris, x=x, y=y)
     plt.show()
 
+
 def dispersal_individual(name):
     filtered_csv = iris.loc[iris["Species"] == name]
     x = filtered_csv["SepalLengthCm"]
@@ -82,10 +83,15 @@ def dispersal_individual(name):
     print(f"Índice de dispersão: {dispersal_index}")
     print("-" * 40)
 
-    sns.scatterplot(data=iris, x=x, y=y, hue='Species')
+    sns.scatterplot(data=iris, x=x, y=y, hue="Species")
     plt.show()
 
-dispersal_individual('Iris-setosa')
+
+# dispersal_individual('Iris-setosa')
+
+sns.histplot(iris["SepalLengthCm"])
+print(scipy.stats.normaltest(iris["SepalLengthCm"]))
+plt.show()
 
 # def heatmap():
 # sns.heatmap(iris.drop(columns=["Id", "Species"]), annot=True)
