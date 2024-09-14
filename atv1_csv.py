@@ -5,57 +5,87 @@ import matplotlib.dates as mdates
 import scipy.stats
 import seaborn as sns
 import pandas as pd
+from threading import Thread
 
 stock = pd.read_csv("stock_data.csv")
 iris = pd.read_csv("Iris.csv")
 
 
-def show_column_info(database: pd.DataFrame, colum_name: str):
-    column = database[colum_name]
-    percentile = np.percentile(database[colum_name], [25, 50, 75])
-    mean = np.mean(database[colum_name])
-    mode = st.multimode(database[colum_name])
-    std = np.std(database[colum_name], ddof=1)
+def show_column_info(database: pd.DataFrame, colum_names: str):
+    column_values = []
+    for column in colum_names:
+        percentile = np.percentile(database[column], [25, 50, 75])
+        mean = np.mean(database[column])
+        mode = st.multimode(database[column])
+        std = np.std(database[column], ddof=1)
 
-    column_values = database[colum_name].values
-    inf, sup = mean - std * 3, mean + std * 3
-    outliers = list(column[(column_values < inf) | (column_values > sup)])
-    no_outliers = list(filter(lambda num: num not in outliers, column_values))
+        column_value = database[column].values
+        column_values.append(column_value)
+        inf, sup = mean - std * 3, mean + std * 3
+        outliers = list(database[column][(column_value < inf) | (column_value > sup)])
+        # no_outliers = list(filter(lambda num: num not in outliers, column_values))
 
-    print(f"Média {colum_name}: {mean :.2f}")
-    print(f"Moda {colum_name}: {mode}")
-    print(f"Mediana {colum_name}: {percentile[1]}")
-    print(f"Desvio padrão {colum_name}: {std :.2f}")
-    print(f"Amplitude interquartil {colum_name}: {percentile[2] - percentile[0]}")
-    print(f"{colum_name} outliers ({len(outliers)}): {outliers}")
-    print(min(column_values), max(column_values))
-    # plt.hist(column_values, 5, (5, 80))
-    # sns.boxplot([column_values, no_outliers], orient="h")
-    # plt.yticks([0,1], ['original', 'no outliers'])
-    
-    # Time series
-    # stock_copy = stock.copy()
-    # stock_copy['Date'] = pd.to_datetime(stock_copy['Date'])
-    # sns.lineplot(data=stock_copy, x='Date', y='High')
-    # sns.lineplot(data=stock_copy, x='Date', y='Low')
+        print(f"Média {column}: {mean :.2f}")
+        print(f"Moda {column}: {mode}")
+        print(f"Mediana {column}: {percentile[1]}")
+        print(f"Desvio padrão {column}: {std :.2f}")
+        print(f"Amplitude interquartil {column}: {percentile[2] - percentile[0] :.2f}")
+        print(f"{column} outliers ({len(outliers)}): {outliers}")
+        print("-" * 40)
 
-
-    # Dispersão
-    # x = iris['SepalLengthCm']
-    # y = iris['SepalWidthCm']
-    
-    # print(scipy.stats.spearmanr(x, y)) # cria um ranking assimétrico
-    # # scipy.stats.pearsonr(x, y) # usa a média métrico
-    # # sns.boxplot(x)
-    # sns.scatterplot(x=x, y=y)
-    # column = iris['Species']
-    # print(iris.loc[column == 'Iris-setosa'])
-    # plt.show()
-
-    # heatmap
-    sns.heatmap(iris, annot=True)
+    sns.boxplot(column_values, orient="h")
+    plt.yticks([name for name in range(len(colum_names))], colum_names)
     plt.show()
 
 
+# iris, ["SepalLengthCm", "SepalWidthCm", "PetalLengthCm", "PetalWidthCm"]
+# stock, ["Open", "Close", "High", "Low"]
+# show_column_info(iris, ["SepalLengthCm", "SepalWidthCm", "PetalLengthCm", "PetalWidthCm"])
 
-show_column_info(stock, "Close")
+
+def time_series(database: pd.DataFrame, date_column_name: str):
+    """Válido para o stock apenas porque ele que tem uma coluna de tempo"""
+    column_date = database[date_column_name]
+    database[date_column_name] = pd.to_datetime(column_date)
+    sns.lineplot(data=database, x=date_column_name, y="High")
+    sns.lineplot(data=database, x=date_column_name, y="Low")
+    plt.show()
+
+
+# time_series(stock, "Date")
+
+
+def dispersal():
+    """Usado apenas com o Iris (flor)"""
+    species = pd.unique(iris["Species"]).tolist()
+    for specie in species:
+        print(f"Species == {specie}")
+        filtered_csv = iris.loc[iris["Species"] == specie]
+        x = filtered_csv["SepalLengthCm"]
+        y = filtered_csv["SepalWidthCm"]
+
+        dispersal_index = scipy.stats.spearmanr(x, y)
+        # spearmanr: usado em dados assimétricos. Cria um ranking para isso
+        # pearsonr: usado em dados simétricos. Usa a média para isso
+        print(f"Índice de dispersão: {dispersal_index}")
+        print("-" * 40)
+
+        sns.scatterplot(data=iris, x=x, y=y)
+    plt.show()
+
+def dispersal_individual(name):
+    filtered_csv = iris.loc[iris["Species"] == name]
+    x = filtered_csv["SepalLengthCm"]
+    y = filtered_csv["SepalWidthCm"]
+
+    dispersal_index = scipy.stats.spearmanr(x, y)
+    print(f"Índice de dispersão: {dispersal_index}")
+    print("-" * 40)
+
+    sns.scatterplot(data=iris, x=x, y=y, hue='Species')
+    plt.show()
+
+dispersal_individual('Iris-setosa')
+
+# def heatmap():
+# sns.heatmap(iris.drop(columns=["Id", "Species"]), annot=True)
