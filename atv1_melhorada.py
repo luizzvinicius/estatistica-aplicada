@@ -11,7 +11,6 @@ iris = pd.read_csv("Iris.csv")
 def show_column_info(database: pd.DataFrame, colum_name: str):
     percentile = np.percentile(database[colum_name], [25, 50, 75])
     mode = st.multimode(database[colum_name])
-    #teste
 
     initial = database[colum_name].values
     values_to_show = [initial]
