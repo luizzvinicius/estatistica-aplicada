@@ -5,7 +5,6 @@ import matplotlib.dates as mdates
 import scipy.stats
 import seaborn as sns
 import pandas as pd
-from threading import Thread
 
 stock = pd.read_csv("stock_data.csv")
 iris = pd.read_csv("Iris.csv")
