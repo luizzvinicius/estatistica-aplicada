@@ -63,10 +63,10 @@ def dispersal():
         x = filtered_csv["SepalLengthCm"]
         y = filtered_csv["SepalWidthCm"]
 
-        dispersal_index = scipy.stats.spearmanr(x, y)
+        dispersal_index = scipy.stats.spearmanr(x, y) # avaliar statistics
         # spearmanr: usado em dados assimétricos. Cria um ranking para isso
         # pearsonr: usado em dados simétricos. Usa a média para isso
-        print(f"Índice de dispersão: {dispersal_index}")
+        print(f"Índice de correlação: {dispersal_index}")
         print("-" * 40)
 
         sns.scatterplot(data=iris, x=x, y=y)
@@ -79,7 +79,7 @@ def dispersal_individual(name):
     y = filtered_csv["SepalWidthCm"]
 
     dispersal_index = scipy.stats.spearmanr(x, y)
-    print(f"Índice de dispersão: {dispersal_index}")
+    print(f"Índice de correlação: {dispersal_index}") # próximo de 1 muito relacionados, próximo de 0 não há influência
     print("-" * 40)
 
     sns.scatterplot(data=iris, x=x, y=y, hue="Species")
