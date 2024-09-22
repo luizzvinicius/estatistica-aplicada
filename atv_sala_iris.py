@@ -4,6 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.stats
+import math
 
 iris = pd.read_csv("Iris.csv")
 species = pd.unique(iris["Species"]).tolist()
@@ -17,7 +18,7 @@ def petal_length_mean():
         print(f"Média de comprimento da pétala na espécie {specie}: {np.array(petal_length).mean() :.2f}cm")
 
 
-petal_length_mean()
+# petal_length_mean()
 
 # Questão 2: há uma correlação significativa do tamanho da pétala e da sépala
 DEFAULT_VALUE = 0.05
@@ -48,12 +49,15 @@ def dispersal():
         plt.show()
 
 
-dispersal()
+# dispersal()
 
 # Questão 3: qual a distribuiçâo das espécies
-def show_column_info(database: pd.DataFrame, colum_names: str): # função auxiliar
+def show_column_info(database: pd.DataFrame, colum_names: list[str]): # função auxiliar
     column_values = []
-    for column in colum_names:
+    linha = 0
+    janela, graficos = plt.subplots(nrows=2, ncols=4)
+    plt.tight_layout()
+    for i, column in enumerate(colum_names):
         percentile = np.percentile(database[column], [25, 50, 75])
         mean = np.mean(database[column])
         mode = st.multimode(database[column])
@@ -71,6 +75,9 @@ def show_column_info(database: pd.DataFrame, colum_names: str): # função auxil
         print(f"Amplitude interquartil {column}: {percentile[2] - percentile[0] :.2f}")
         print(f"{column} outliers ({len(outliers)}): {outliers}")
         print("-" * 40)
+
+        sns.histplot(database[column], bins=math.ceil(math.log2(len(database[column])) + 1), ax=graficos[0][i])
+        print(linha, i)
 
     sns.boxplot(column_values, orient="h")
     plt.yticks([name for name in range(len(colum_names))], colum_names)
