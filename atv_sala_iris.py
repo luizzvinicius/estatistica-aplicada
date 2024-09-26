@@ -1,10 +1,10 @@
 import statistics as st
+import math
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.stats
-import math
 
 iris = pd.read_csv("Iris.csv")
 species = pd.unique(iris["Species"]).tolist()
@@ -22,6 +22,8 @@ def petal_length_mean():
 
 # Questão 2: há uma correlação significativa do tamanho da pétala e da sépala
 DEFAULT_VALUE = 0.05
+
+
 def dispersal():
     for specie in species:
         print(f"Espécie: {specie}")
@@ -51,13 +53,13 @@ def dispersal():
 
 # dispersal()
 
+
 # Questão 3: qual a distribuiçâo das espécies
-def show_column_info(database: pd.DataFrame, colum_names: list[str]): # função auxiliar
+def show_column_info(database: pd.DataFrame, colum_names: list[str]):  # função auxiliar
     column_values = []
-    linha = 0
-    janela, graficos = plt.subplots(nrows=2, ncols=4)
+    _, graficos = plt.subplots(nrows=2, ncols=4)
     plt.tight_layout()
-    for i, column in enumerate(colum_names):
+    for index, column in enumerate(colum_names):
         percentile = np.percentile(database[column], [25, 50, 75])
         mean = np.mean(database[column])
         mode = st.multimode(database[column])
@@ -76,8 +78,11 @@ def show_column_info(database: pd.DataFrame, colum_names: list[str]): # função
         print(f"{column} outliers ({len(outliers)}): {outliers}")
         print("-" * 40)
 
-        sns.histplot(database[column], bins=math.ceil(math.log2(len(database[column])) + 1), ax=graficos[0][i])
-        print(linha, i)
+        sns.histplot(
+            database[column],
+            bins=math.ceil(math.log2(len(database[column])) + 1),
+            ax=graficos[0][index],
+        )
 
     sns.boxplot(column_values, orient="h")
     plt.yticks([name for name in range(len(colum_names))], colum_names)
@@ -94,13 +99,15 @@ def distribution_of_data():
         for column in columns:
             column_pvalue = scipy.stats.shapiro(filtered_csv[column]).pvalue
 
+            simetria = "simétrico"
             if column_pvalue < DEFAULT_VALUE:
-                infos[specie].append("assimétrico")
-            else:
-                infos[specie].append("simétrico")
+                simetria = "assimétrico"
+
+            infos[specie].append(simetria)
 
         show_column_info(filtered_csv, columns)
     print(infos)
+
 
 distribution_of_data()
 
