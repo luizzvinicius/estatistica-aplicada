@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.stats as stats
+import scikit_posthocs as sp
 
 LIMIT = 0.05
 
@@ -61,7 +62,7 @@ else:
 # - Two sided -> usar p_value / 2 -> pois two sided são duplicados
 
 #############################################################################
-
+# peso em relacao ao tipo de leite
 only_breast=np.array([794.1, 716.9, 993. , 724.7, 760.9, 908.2, 659.3 , 690.8, 768.7, 717.3 , 630.7, 729.5, 
              714.1, 810.3, 583.5, 679.9, 865.1])
 
@@ -70,6 +71,24 @@ only_formula=np.array([ 898.8, 881.2, 940.2, 966.2, 957.5, 1061.7, 1046.2, 980.4
 
 both=np.array([976.4, 656.4, 861.2, 706.8, 718.5, 717.1, 759.8, 894.6, 867.6, 805.6, 765.4, 800.3, 789.9, 875.3, 
       740. , 799.4, 790.3, 795.2 , 823.6, 818.7, 926.8, 791.7, 948.3])
+
+_, p_value_var = stats.levene(only_breast, only_formula)
+
+media_breast = np.mean(only_breast)
+media_formula = np.mean(only_formula)
+media_both = np.mean(both)
+
+print(media_breast, media_formula, media_both)
+
+F, p_value = stats.f_oneway(only_breast, only_formula, both)
+
+if p_value_ttest < 0.05:
+    print("reject null hypotesis")
+else:
+    print("Fail to reject null hypotesis")
+
+posthoc_df = sp.posthoc_ttest([media_breast, media_formula, media_both], equal_var=True, p_adjust="bonferroni")
+print(posthoc_df)
 
 ################################################################
 
