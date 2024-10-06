@@ -84,7 +84,10 @@ DUAS AMOSTRAS NÃO PAREADAS
 SÃO NORMALMENTE DISTRIBUIDAS
 MESMA VARIÂNCIA
 
-APLICANDO T-TEST (TESTE PARAMÉTRICO)
+O Teste t compara as médias de dois grupos para determinar se elas são significativamente diferentes entre si.
+
+Uso: Quando você tem duas amostras independentes (ou uma amostra comparada com uma média conhecida) e deseja testar se suas médias são diferentes.
+Suposição: As amostras devem seguir uma distribuição normal e ter variâncias semelhantes (dependendo da variação do teste t).
 
 Hipóteses
 H0: as médias são iguais
@@ -206,6 +209,11 @@ levene_test(only_breast, only_formula, both)
 
 # APLICANDO ANOVA - ANÁLISE DE VARIÂNCIA (TESTE PARAMÉTRICO)
 
+# testa se há diferenças significativas entre as médias de três ou mais grupos.
+
+# Uso: Quando você tem três ou mais grupos independentes e quer testar se ao menos uma das médias é diferente.
+# Suposição: As amostras devem seguir uma distribuição normal e ter variâncias homogêneas entre os grupos.
+
 # H0: as médias são iguais;
 # H1: pelo menos uma das médias é diferente.
 
@@ -230,6 +238,12 @@ else:
 # MESMA VARIÂNCIA
 
 # APLICANDO T-TEST
+
+
+# O Posthoc t-test é utilizado após um ANOVA quando se detecta uma diferença significativa, para identificar quais grupos são diferentes entre si.
+
+# Uso: Quando o ANOVA detecta diferenças significativas entre grupos, o posthoc t-test compara cada par de grupos individualmente.
+# Suposição: Mesmo que o ANOVA tenha identificado uma diferença, o posthoc t-test também exige variância homogênea e dados normalmente distribuídos.
 
 # H0: as médias são iguais
 # H1: as médias são diferentes
@@ -313,6 +327,10 @@ levene_test(test_team, developer_team)
 
 
 #  APLICANDO MANN-WHITNEY U TEST (NÃO PARAMÉTRICO)
+
+# O Mann-Whitney U é um teste não paramétrico que compara dois grupos para ver se as suas distribuições diferem significativamente.
+# Uso: Quando você tem duas amostras independentes que não atendem às suposições de normalidade exigidas pelo t-test.
+# Suposição: Não exige normalidade; funciona bem para dados de escalas ordinais ou amostras pequenas.
 
 # Hipóteses
 # H0: as médias são iguais
@@ -418,6 +436,10 @@ levene_test(youtube, instagram, facebook)
 # VARIÂNCIAS DIFERENTES (VARIABILIDADE NÃO INFLUENCIA NO TESTE)
 
 # APLICANDO KRUSKAL-WALLIS ANOVA (NÃO PARAMÉTRICO)
+
+# O Kruskal-Wallis é um teste não paramétrico usado para comparar três ou mais grupos, similar ao ANOVA, mas sem a exigência de normalidade.
+# Uso: Quando você tem três ou mais grupos independentes e os dados não seguem uma distribuição normal.
+# Suposição: Não exige normalidade ou variância homogênea.
 
 # H0: as médias são iguais
 # H1: pelo menos uma das médias é diferente
@@ -540,7 +562,7 @@ else:
     print("Fail to reject null hypothesis")
 
 
-# Conclusção: Existe significância suficiente para afirmar que a média de colesterol na população antes da dieta e depois
+# Conclusão: Existe significância suficiente para afirmar que a média de colesterol na população antes da dieta e depois
 # da dieta são diferentes, e podemos observar que a média de colesterol na população após a dieta é menor que antes da dieta.
 
 
@@ -600,15 +622,19 @@ check_normality(endframe)
 # H0: as médias são iguais
 # H1: as médias são diferentes
 
+# O Wilcoxon Signed Rank é um teste não paramétrico que compara dois conjuntos de dados pareados ou dependentes, similar ao t-test para amostras pareadas.
+# Uso: Quando você tem duas amostras dependentes/pareadas e os dados não seguem uma distribuição normal.
+# Suposição: Não exige normalidade, mas os dados devem ser pareados (ex.: medições antes e depois de um tratamento).
+
 # Conclusões:
 # Se pvalue <= 0.05, rejeita H0 e assume H1;
 # Se pvalue > 0.05 não deve rejeitar H0.
 
 test, pvalue = stats.wilcoxon(endframe, piedpiper)  # alternative default two sided
-print("p-value:%.6f" % pvalue, ">> one_tailed_pval:%.6f" % (pvalue / 2))
+print(f"p-value: {pvalue :.6f} >> one_tailed_pval: {pvalue / 2 :.6f}")
 
 test, one_sided_pvalue = stats.wilcoxon(endframe, piedpiper, alternative="less")
-print("one sided pvalue:%.6f" % (one_sided_pvalue))
+print(f"one sided pvalue: {one_sided_pvalue :.6f}")
 if pvalue < 0.05:
     print("Reject null hypothesis")
 else:
