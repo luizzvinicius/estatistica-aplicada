@@ -64,8 +64,8 @@ def levene_test(*data):
     print(msg)
 
 
-def t_teste_ind(*data):
-    _, p_value = stats.ttest_ind(*data)
+def t_teste_ind(*data, equal_var=True):
+    _, p_value = stats.ttest_ind(*data, equal_var)
     print(f"p_value t_teste independente: {p_value :.8f}")
     one_sided = p_value / 2
     print(f"Amostra unilateral. p_value unilateral: { one_sided :.4f}")
@@ -164,3 +164,53 @@ def wilcoxon(dados1, dados2):  # pvalue é o importante
     else:
         msg = "As médias são iguais"
     print(msg)
+
+
+# Questão 1
+
+grupo_a = np.array([80, 85, 90, 78, 82, 88, 84])
+grupo_b = np.array([78, 80, 85, 88, 82, 86, 90])
+
+# teste_normalidade(grupo_a) # a distribuição é normal | pvalue 0.9560
+# teste_normalidade(grupo_b) # a distribuição é normal | pvalue 0.9026
+# levene 0.9132 | A variância das amostras são as mesmas
+# levene_test(grupo_a, grupo_b)
+
+# t_teste_ind(grupo_a, grupo_b) # p_value unilateral: 0.4515 as médias são iguais
+
+"""Após aplicar o teste de Shapiro-Wilk e obter 0.9560 como pvalor do grupo A e 0.9026 para o valor p do grupo B, conclui-se que a distribuição 
+de ambas as amostras são normais. Em seguida, aplicou-se o teste de levene, obtendo 0.9132 pra o p valor, concluindo também que a variância das amostras são as mesmas.
+Depois desses testes e levando em conta que as amostras não são pareadas, escolhi o tteste, obtendo 0.4515 (unilateral), concluindo que a média de eficácia dos métodos de estudo 
+foi a mesma para os grupos A e B."""
+
+# Questão 2 
+especie_x = np.array([150, 155, 160, 158, 152, 162])
+especie_y = np.array([145, 148, 150, 149, 151, 147])
+
+# teste_normalidade(especie_x) # a distribuição é normal | pvalue 0.8263
+# teste_normalidade(especie_y) # a distribuição é normal | pvalue 0.9637
+# p_value levene: 0.0493 | A variância das amostras são diferentes
+# levene_test(especie_x, especie_y)
+# t_teste_ind(especie_x, especie_y, equal_var=False)
+
+"""Após aplicar o teste de Shapiro-Wilk e obter 0.8263 como pvalor da espécie x e 0.9637 para o valor p da espécie y, conclui-se que a distribuição 
+de ambas as amostras são normais. Em seguida, aplicou-se o teste de levene, obtendo 0.0493 para o p valor, concluindo também que a variância das amostras são diferentes.
+Depois desses testes e levando em conta que as amostras não são pareadas, escolhi o tteste (adaptado com o parametro equal_var = False), obtendo 0.0019 (unilateral), 
+concluindo que a média de peso das aves foi diferentes"""
+
+# Questão 3
+dieta_a = np.array([5, 7, 6, 8, 5])
+dieta_b = np.array([4, 6, 5, 7, 6])
+dieta_c = np.array([6, 8, 7, 9, 7])
+
+# teste_normalidade(dieta_a) # a distribuição é 0.4211 | pvalue 
+# teste_normalidade(dieta_b) # a distribuição é 0.8140 | pvalue 
+# teste_normalidade(dieta_c) # a distribuição é 0.8140 | pvalue 
+# p_value levene: 0.9009 | A variância das amostras são as mesmas
+# levene_test(dieta_a, dieta_b, dieta_c)
+
+# anova(dieta_a, dieta_b, dieta_c)
+
+"""Após aplicar o teste de Shapiro-Wilk e obter 0.4211 como pvalor da dieta A e 0.8140 para o pvalor das dietas B e C, conclui-se que a distribuição 
+de todas as amostras são normais. Em seguida, aplicou-se o teste de levene, obtendo 0.9009 para o p valor, concluindo também que a variância das amostras são as mesmas.
+Depois desses testes e levando em conta que as amostras não são pareadas, escolhi o Anova, obtendo 0.091988, concluindo que a média de perda de peso sâo as mesmas"""
