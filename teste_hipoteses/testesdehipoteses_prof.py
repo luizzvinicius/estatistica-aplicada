@@ -446,7 +446,7 @@ levene_test(youtube, instagram, facebook)
 
 # Conclusões:
 # Se pvalue <= 0.05, rejeita H0 e assume H1;
-# Se pvalue > 0.05 não deve rejeitar H0.
+# Se pvalue > 0.05 não deve redepoisjeitar H0.
 
 F, p_value = stats.kruskal(youtube, instagram, facebook)
 print("p value:%.6f" % p_value)
