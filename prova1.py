@@ -42,7 +42,7 @@ import numpy as np
 
 def teste_normalidade(data):
     _, p_value = stats.shapiro(data)
-    print(f"p_value shapiro: {p_value :.4f}")
+    print(f"p_value shapiro: {p_value :.4f}", end=" ")
 
     msg = ""
     if p_value < 0.05:
@@ -50,6 +50,7 @@ def teste_normalidade(data):
     else:
         msg = "Não rejeitar H0. A distribuição da amostra é normal"
     print(msg)
+    return float(f"{p_value :.4f}")
 
 
 def levene_test(*data):
